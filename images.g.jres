@@ -1,0 +1,17 @@
+{
+    "image1": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAA4AAAAAAAAA4ADQDQAA7u7uvrsNAODe3e2+u8z84N7f7bu7zPzg3d3du7vMzODe3d27u8zM4N3f7bu7zPzg3t3tvrvM/ADu7u6+uw0AAAAA4ADQDQAAAAAOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "Maybe Gravy"
+    },
+    "image2": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwAAALC7uwALAAAAsLu7AAu7uwCwu7u7uwsAALC7uwALu7sAsLu7AAsAAAAAAAAACwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "stick"
+    },
+    "*": {
+        "mimeType": "image/x-mkcd-f4",
+        "dataEncoding": "base64",
+        "namespace": "myImages"
+    }
+}
