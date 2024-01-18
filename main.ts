@@ -39,3 +39,6 @@ let twif = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Player)
 controller.player2.moveSprite(twif)
+scene.cameraFollowSprite(twif)
+controller.moveSprite(twif)
+stick.setStayInScreen(true)
