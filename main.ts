@@ -1,25 +1,5 @@
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
     tiles.setCurrentTilemap(tilemap`level1`)
-    stick = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . 6 6 6 . . . . . . . 
-        . . . . . 6 6 6 6 6 . . . . . . 
-        . . . . 6 6 6 6 6 6 6 . . . . . 
-        . . . . 6 6 6 6 6 6 6 . . . . . 
-        . . . . . 6 6 6 6 6 . . . . . . 
-        . . . . . 6 6 6 6 6 . . . . . . 
-        . . . . . . 6 6 6 . . . . . . . 
-        . . . . . . . 6 . . . . . . . . 
-        . . . 6 6 6 . 6 . 6 6 6 . . . . 
-        . . . . . 6 6 6 6 6 . . . . . . 
-        . . . . . . . 6 . . . . . . . . 
-        . . . . . . 6 6 6 . . . . . . . 
-        . . . . . 6 6 . 6 6 . . . . . . 
-        . . . . 6 6 . . . 6 6 . . . . . 
-        . . . . 6 . . . . . 6 . . . . . 
-        `, SpriteKind.Player)
-    scene.cameraFollowSprite(stick)
-    controller.moveSprite(stick)
     twif = sprites.create(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -39,9 +19,23 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Player)
     controller.player2.moveSprite(twif)
+    scene.cameraFollowSprite(twif)
 })
-let twif: Sprite = null
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
+    controller.moveSprite(stick, 30, 30)
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    tiles.setCurrentTilemap(tilemap`level1`)
+    stick = sprites.create(assets.image`He is right`, SpriteKind.Player)
+    stick.setPosition(12, 82)
+    scene.cameraFollowSprite(stick)
+    controller.moveSprite(stick, 100, 100)
+})
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.darkGroundSouthWest0, function (sprite, location) {
+    controller.moveSprite(stick, 100, 100)
+})
 let stick: Sprite = null
+let twif: Sprite = null
 scene.setBackgroundImage(img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
