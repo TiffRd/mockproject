@@ -3,7 +3,11 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "multiplayer": "*"
+        "multiplayer": "*",
+        "arcade-text": "github:microsoft/arcade-text#v1.3.0",
+        "controller": "*",
+        "arcade-sprite-util": "github:jwunderl/arcade-sprite-util#v0.4.1",
+        "arcade-sprite-data": "github:microsoft/arcade-sprite-data#v0.2.1"
     },
     "files": [
         "main.blocks",
