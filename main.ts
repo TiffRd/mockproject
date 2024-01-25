@@ -1,16 +1,145 @@
+namespace SpriteKind {
+    export const SelectableCharacter = SpriteKind.create()
+}
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
+    controller.moveSprite(stick, 10, 20)
+})
+function show_character_picker () {
+    scene.centerCameraAt(80, 60)
+    for (let value of sprites.allOfKind(SpriteKind.Player)) {
+        let gravity = 0
+        value.ay = gravity
+        value.setFlag(SpriteFlag.Invisible, true)
+    }
+    showCharacterScreen = true
+    Huge_stick = sprites.create(assets.image`He is right`, SpriteKind.SelectableCharacter)
+    Huge_stick.z = 101
+    Huge_stick.setPosition(32, 67)
+    sprites.setDataSprite(Huge_stick, "player", stick)
+    textSprite = textsprite.create("Choose Your Character", 11, 15)
+    textSprite.z = 101
+    textSprite.setPosition(80, 29)
+    Big_twif = sprites.create(assets.image`myImage`, SpriteKind.SelectableCharacter)
+    Big_twif.z = 101
+    Big_twif.setPosition(73, 67)
+    sprites.setDataSprite(Big_twif, "player", twif)
+    ourCharacters = [Huge_stick, Big_twif]
+    current_character_index = 1
+    character_selector_box = sprites.create(img`
+        cccccccccccccccccccccccccccccccccccc
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        c..................................c
+        cccccccccccccccccccccccccccccccccccc
+        `, SpriteKind.Player)
+    character_selector_box.z = 101
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
     controller.moveSprite(stick, 30, 30)
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    show_character_picker()
+    stick = sprites.create(img`
+        . . . . . . c c c c c c . . . . 
+        . . . . . c 6 7 7 7 7 6 c . . . 
+        . . . . c 7 7 7 7 7 7 7 7 c . . 
+        . . . c 6 7 7 7 7 7 7 7 7 6 c . 
+        . . . c 7 7 7 c 6 6 6 6 c 7 c . 
+        . . . f 7 7 7 6 f 6 6 f 6 7 f . 
+        . . . f 7 7 7 7 7 7 7 7 7 7 f . 
+        . . c f 6 7 7 c 6 7 7 7 7 f . . 
+        . c 7 7 f 6 7 7 c c c c f . . . 
+        c 7 7 7 7 f c 6 7 7 7 2 7 c . . 
+        c c 6 7 7 6 c f c 7 7 2 7 7 c . 
+        . . c 6 6 6 c c f 6 7 1 1 1 1 c 
+        . . f 6 6 6 6 c 6 6 1 1 1 1 1 f 
+        . . f c 6 6 6 6 6 1 1 1 1 1 6 f 
+        . . . f 6 6 6 1 1 1 1 1 1 6 f . 
+        . . . . f c c c c c c c c c . . 
+        `, SpriteKind.Player)
+    twif = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . 3 3 3 3 . . . . . . . 
+        1 1 1 1 3 3 3 3 3 3 3 . . . . . 
+        1 1 1 1 1 3 3 3 3 3 3 3 . . . . 
+        1 1 1 1 1 1 3 3 3 3 3 3 3 . . . 
+        1 f f f 1 1 3 3 3 f f f 3 . . . 
+        1 f f f f 1 3 3 1 f f f 1 1 . . 
+        . 3 f f f 3 3 1 1 f f 1 1 1 3 . 
+        . 3 3 3 3 3 3 1 1 1 1 1 1 1 3 3 
+        . 3 3 3 3 3 3 3 1 1 1 1 1 1 3 3 
+        . . 3 3 3 3 3 3 3 1 1 1 1 3 3 3 
+        . . 3 3 3 3 3 3 3 3 1 1 1 3 3 3 
+        . . . 3 3 3 3 3 3 3 3 3 3 3 3 3 
+        . . . . 3 3 3 3 3 3 3 3 3 3 3 . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Player)
     tiles.setCurrentTilemap(tilemap`level1`)
-    stick = sprites.create(assets.image`He is right`, SpriteKind.Player)
-    stick.setPosition(12, 82)
+    stick.setPosition(8, 111)
     scene.cameraFollowSprite(stick)
     controller.moveSprite(stick, 100, 100)
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (showCharacterScreen) {
+        current_character_index = (current_character_index + 1) % ourCharacters.length % ourCharacters.length
+    }
+})
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (showCharacterScreen) {
+        current_character_index = (current_character_index + 1) % ourCharacters.length
+    }
+})
+spriteutils.createRenderable(100, function (screen2) {
+    if (showCharacterScreen) {
+        screen2.fill(11)
+        currently_selected_character = ourCharacters[current_character_index]
+        character_selector_box.setPosition(currently_selected_character.x, currently_selected_character.y)
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.darkGroundSouthWest0, function (sprite, location) {
     controller.moveSprite(stick, 100, 100)
 })
+let currently_selected_character: Sprite = null
+let character_selector_box: Sprite = null
+let current_character_index = 0
+let ourCharacters: Sprite[] = []
+let twif: Sprite = null
+let Big_twif: Sprite = null
+let textSprite: TextSprite = null
+let Huge_stick: Sprite = null
+let showCharacterScreen = false
 let stick: Sprite = null
 scene.setBackgroundImage(img`
     fffffffcbccffffffffffcfbddddddddddd111111111111111111111111dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddbffcddffffffcfcfffff
