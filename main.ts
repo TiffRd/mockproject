@@ -1,5 +1,6 @@
 namespace SpriteKind {
     export const SelectableCharacter = SpriteKind.create()
+    export const Backround = SpriteKind.create()
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
     controller.moveSprite(stick, 10, 20)
@@ -68,48 +69,29 @@ function show_character_picker () {
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
     controller.moveSprite(stick, 30, 30)
 })
+controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
+	
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    show_character_picker()
-    stick = sprites.create(img`
-        . . . . . . c c c c c c . . . . 
-        . . . . . c 6 7 7 7 7 6 c . . . 
-        . . . . c 7 7 7 7 7 7 7 7 c . . 
-        . . . c 6 7 7 7 7 7 7 7 7 6 c . 
-        . . . c 7 7 7 c 6 6 6 6 c 7 c . 
-        . . . f 7 7 7 6 f 6 6 f 6 7 f . 
-        . . . f 7 7 7 7 7 7 7 7 7 7 f . 
-        . . c f 6 7 7 c 6 7 7 7 7 f . . 
-        . c 7 7 f 6 7 7 c c c c f . . . 
-        c 7 7 7 7 f c 6 7 7 7 2 7 c . . 
-        c c 6 7 7 6 c f c 7 7 2 7 7 c . 
-        . . c 6 6 6 c c f 6 7 1 1 1 1 c 
-        . . f 6 6 6 6 c 6 6 1 1 1 1 1 f 
-        . . f c 6 6 6 6 6 1 1 1 1 1 6 f 
-        . . . f 6 6 6 1 1 1 1 1 1 6 f . 
-        . . . . f c c c c c c c c c . . 
-        `, SpriteKind.Player)
-    twif = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . 3 3 3 3 . . . . . . . 
-        1 1 1 1 3 3 3 3 3 3 3 . . . . . 
-        1 1 1 1 1 3 3 3 3 3 3 3 . . . . 
-        1 1 1 1 1 1 3 3 3 3 3 3 3 . . . 
-        1 f f f 1 1 3 3 3 f f f 3 . . . 
-        1 f f f f 1 3 3 1 f f f 1 1 . . 
-        . 3 f f f 3 3 1 1 f f 1 1 1 3 . 
-        . 3 3 3 3 3 3 1 1 1 1 1 1 1 3 3 
-        . 3 3 3 3 3 3 3 1 1 1 1 1 1 3 3 
-        . . 3 3 3 3 3 3 3 1 1 1 1 3 3 3 
-        . . 3 3 3 3 3 3 3 3 1 1 1 3 3 3 
-        . . . 3 3 3 3 3 3 3 3 3 3 3 3 3 
-        . . . . 3 3 3 3 3 3 3 3 3 3 3 . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Player)
     tiles.setCurrentTilemap(tilemap`level1`)
-    stick.setPosition(8, 111)
-    scene.cameraFollowSprite(stick)
-    controller.moveSprite(stick, 100, 100)
+    if (showCharacterScreen) {
+        thePlayer = sprites.readDataSprite(currently_selected_character, "player")
+        tiles.placeOnRandomTile(thePlayer, sprites.dungeon.darkGroundNorthEast1)
+        scene.cameraFollowSprite(thePlayer)
+        for (let value of sprites.allOfKind(SpriteKind.SelectableCharacter)) {
+            sprites.destroy(value)
+        }
+        for (let value of sprites.allOfKind(SpriteKind.Backround)) {
+            sprites.destroy(value)
+        }
+        for (let value of sprites.allOfKind(SpriteKind.Text)) {
+            sprites.destroy(value)
+        }
+        controller.moveSprite(thePlayer, 100, 0)
+        showCharacterScreen = false
+    } else {
+    	
+    }
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     if (showCharacterScreen) {
@@ -132,14 +114,15 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.darkGroundSouthWest0, fun
     controller.moveSprite(stick, 100, 100)
 })
 let currently_selected_character: Sprite = null
+let thePlayer: Sprite = null
 let character_selector_box: Sprite = null
 let current_character_index = 0
 let ourCharacters: Sprite[] = []
-let twif: Sprite = null
 let Big_twif: Sprite = null
 let textSprite: TextSprite = null
 let Huge_stick: Sprite = null
 let showCharacterScreen = false
+let twif: Sprite = null
 let stick: Sprite = null
 scene.setBackgroundImage(img`
     fffffffcbccffffffffffcfbddddddddddd111111111111111111111111dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddbffcddffffffcfcfffff
@@ -193,23 +176,23 @@ scene.setBackgroundImage(img`
     ddddddddddddddbd1b11bbccccccccccccccccccccccccccbcccccccccccccccccb1d111111bbbbbdddddbbdddddddddddddddddbbbbddddddddddddbbdddddbdbbbbbbbbbbbbcffffffffffffffffff
     ddddddddddddddbb1b11bbccccccccccccccccccccccccccccccccccccccccccccd1111b1111bbb11ddddbbdddddddddddddddddbbbbddddddddddddbbdddddbbbbbbbbbbbbbbcffffffffffffffffff
     dddddddddddddddb1b1db1ccccccccccccccccccccccccccccccccccccccccccccc1111d1111bbb11dddddbbddddddddddddddddbbbbbddddddddddddbdddddbbbbbbbbbbbbbbbcfffffffffffffffff
-    ddddddddddddddddbb1bbdccccccccccccccccccccccccccccccccccccccccccccb1111d1111bbbddddddddbddddddddddddddddbbbbbddddddddddddbbdddbbbbbbbbbbbbbbbcffffffffffffffffff
-    ddddddddddddddddbb1bbdccccccccccccccccccccccccccccccccccccccccccccb1b11d1111bbbddddddddbbdbbddddddddddddbbbbbddddddddddddbbddbbbbbbbbbbbbbbbcfcffffffffffffffcff
-    ddddddddddddddddbb1b11cccccccccccccccccccccccccccccccccccccccccccccbbb111111bbbddddddddbbdbdddddddbbddddbbbbbdddddddddddbbbbbbbbbbbbbbbbbbbccfffffffffffffffffff
-    ddddddddddddddddbddbd1ccccccccccccccccccccccccccccccccccccccccccccbbb111d111bbbb1dddddddbbbdddddddbbddddbbbbbddddddddbdbbbbbbbbbbbbbbbbbbbbcfcffffffffffffffffff
-    ddddddddddddddddbbb111cccccccccccccccccccccccccccccccccccccccccccc1bb1111111bbbbddddddddbbbdddddddbdddddbbbbbddddbdddbdbbbbbbbbbbbbbbbbbbbbffffffffffffffffffcff
-    ddddddddddddddddbbd111ccccccccccccccccccccccccccccccccccccccccccccd1bbb11111bbbbdddddddddbbddddddbbdddddbbbbbdddbbdddbbbbbbbbdbbbbbbbbbbbbcfffffffffffffffffffff
-    ddddddddddddddddbbdd1dcccccccccccccccccccccccccccccccccccccccccccc111bb11111bbbbdddd1ddddbbddddddbbdddddbbbbbdddbbddddddbdddddddddbbbbbbbbcfffffffcfffffffffffff
-    dddddddbbdddddbbbbddddcccccccccccccccccccccccccccccccccccccccccccc111bb1111bbbbbdddddddddbbbdddddbbdddddbbbbbddddbdbdddddddddddddddddddddddfffffffffffffffffffff
-    dbddddddddbbbbbbbbbbbbccccccccccccccccccccccccccccccccccccccbcccccb11bb1111bbbbbdddddddddbbbdddddbbdddddbbbbbbdddddddddddddddbddddddddddbbcfffffffffffffffffffff
-    ddbddbddbbbbbbbbbbbbbbcccccccccccccccccccccccccccccbccccccccccccccd11b11111bbbbbbddddddddbbbdddddbbddddbbbbbbdddddddddddddddddddddddddddbcffffffffffffffffffffff
-    dbbbbbbbbbbbbbbbbbbbbbcccccccccccccccccccccccccccccccccccccccccccc111bb111bbbbbbbbdddddddbbbbddddbbdddbbbbbbddddddddddddddddddddddddddbbbcdfffffffffffffffffffff
-    bbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccccccccccccccccccccccccccccbb1bb1bbbbbbbbbbbbdddddbbbbddddbbddbbbbddbbdddddddddddddddddddbddddbccfddfffffffffffffffffffff
-    dbbbbbbbbbbbbbbbbbbbbbbcccccccccccccccccccccccccccccccccccccccccccbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbdddddddddddddbdddddddddddddbcffffffffffffffffffffffffff
-    bbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccccccccccccccccccccccccccccbbbbbbbbbbbbbbbbbbbbbbbbbbbbdbbbdbddddbdddddddddddddddddddddddddddccffffffffffffffffffffffffff
-    bbbbbbbbddbbbbbbbbbbbbcccccccccccccccccccccccccccccccccccccccccccccbbbbbbbbbbbbbbbbbbbbbbbbddddddddddbddddddddddddddddddddddbdddddbbbffbdfffffffffffffffffffffff
-    bbbbbbbdddddbbbbbbbbbbcccccccccccccccccccccccccccccccccccccccccccccbbbbbbbbbbbbbbbbbbbbbbddddbddddddddbdddddddddddddddddddddddddddbddfcbfdffffffffffffffffffffff
-    bbbbddddddddddddddbbbbcccccccccccccccccccccccccccccccccccccccccccccccbbbbbbbbbbbbdddddddddddddddddddddddddddddddddddddddddddddddddbdffdffbcfffffffffffffffffffff
+    ddddddddddddddddbb1bbdccccccccccccccccccfcccccccccccccfccccccccffcb1111ffffffffffddfffffffffddddddddddddbbbbbddddddddddddbbdddbbbbbbbbbbbbbbbcffffffffffffffffff
+    ddddddddddddddddbb1bbdccccccccccccccccccffcccccccccccffccccccccffcb1b11d1111bbbdfddfdddbbdbbddddddddddddbbbbbddddddddddddbbddbbbbbbbbbbbbbbbcfcffffffffffffffcff
+    ddddddddddddddddbb1b11ccccccccccccccccccfcfcccccccccfcfccccccccffccbbb111111bbbfdddfdddbbdbdddddddbbddddbbbbbdddddddddddbbbbbbbbbbbbbbbbbbbccfffffffffffffffffff
+    ddddddddddddddddbddbd1ccccccccccccccccccfcfcccccccccfcfccccccccfcfbbb111d111bbbfdddfddddbbbdddddddbbddddbbbbbddddddddbdbbbbbbbbbbbbbbbbbbbbcfcffffffffffffffffff
+    ddddddddddddddddbbb111ccccccccccccccccccfccfcccccccfccfcccccccfccf1bb1111111bbfbdddfddddbbbdddddddbdddddbbbbbddddbdddbdbbbbbbbbbbbbbbbbbbbbffffffffffffffffffcff
+    ddddddddddddddddbbd111ccccccccccccccccccfccfcccccccfccfcccccccfccfd1bbb11111bfbbdddfdddddbbddddddbbdddddbbbbbdddbbdddbbbbbbbbdbbbbbbbbbbbbcfffffffffffffffffffff
+    ddddddddddddddddbbdd1dccccccccccccccccccfcccfcccccfcccfcccccccfcccf11bb11111bfbbdddf1ddddbbddddddbbdddddbbbbbdddbbddddddbdddddddddbbbbbbbbcfffffffcfffffffffffff
+    dddddddbbdddddbbbbddddccccccccccccccccccfcccfcccccfcccfcccccccfcccf11bb1111bfbbbdddfdddddbbbdddddbbdddddbbbbbddddbdbdddddddddddddddddddddddfffffffffffffffffffff
+    dbddddddddbbbbbbbbbbbbccccccccccccccccccfcccfcccccfcccfcccccbfccccf11bb1111fbbbbdddfdddddbbbdddddbbdddddbbbbbbdddddddddddddddbddddddddddbbcfffffffffffffffffffff
+    ddbddbddbbbbbbbbbbbbbbccccccccccccccccccfccccfcccfcbccfccccccfccccdf1b11111fbbbbbddfffffdbbbdddddbbddddbbbbbbdddddddddddddddddddddddddddbcffffffffffffffffffffff
+    dbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccfccccfcccfccccfccccccfcccc1f1bb111fbbbbbbbdfdddddbbbbddddbbdddbbbbbbddddddddddddddddddddddddddbbbcdfffffffffffffffffffff
+    bbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccfcccccfcfcccccfcccccfcffffff1bb1bfbbbbbbbbbfdddddbbbbddddbbddbbbbddbbdddddddddddddddddddbddddbccfddfffffffffffffffffffff
+    dbbbbbbbbbbbbbbbbbbbbbbcccccccccccccccccfcccccfcfcccccfcccccfcccccbbfbbbbfbbbbbbbbbfbbbbbbbbbbbbbbbbbbbbbdddddddddddddbdddddddddddddbcffffffffffffffffffffffffff
+    bbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccfcccccfffcccccfcccccfcccccbbfbbbfbbbbbbbbbbfbbbbbbbbbbdbbbdbddddbdddddddddddddddddddddddddddccffffffffffffffffffffffffff
+    bbbbbbbbddbbbbbbbbbbbbccccccccccccccccccfccccccfccccccfcccccfccccccbfbbfbbbbbbbbbbbfbbbbbbbddddddddddbddddddddddddddddddddddbdddddbbbffbdfffffffffffffffffffffff
+    bbbbbbbdddddbbbbbbbbbbccccccccccccccccccfccccccfccccccfccccfcccccccbbfbffffffffffbbfffffffffdbddddddddbdddddddddddddddddddddddddddbddfcbfdffffffffffffffffffffff
+    bbbbddddddddddddddbbbbcccccccccccccccccccccccccccccccccccccccccccccccbbbbbbbbbbbbbddddddddddddddddddddddddddddddddddddddddddddddddbdffdffbcfffffffffffffffffffff
     bbbddddddddddddbbbbbbbcccccccccccccccccccccccccccccccccccccccccccccccccbbbdbbdbdddddddbddddbddddddddddddddddddddddddddddddddddddddcffcdfffffffffffffffffcfffffff
     bbdddddddddddddbbbbbbbcccccccccccccccccccccccccccccccccccccccccccccbcccbbbbbddbdddddddddddddddddddddddddddddddddddddddddddddddddbcdffdfcdfffffffffffffffffffffff
     bddddddddddddddbdbbbbccccccccccccccccccccccccccccccccccccccccccbcbbbcbddddddddddddbddddddddddddddddddddddddddddddddddbddddddddddbfcffffcffffffffffffffffffffffff
@@ -263,3 +246,41 @@ scene.setBackgroundImage(img`
     fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbffffbffffdfffcddcfffffffffffffffff
     fffffffffffffffffffffffffffffffffbffffffbffffffffffffffffffffffbfcffffcfffffffffffffffcffffffffffffffffffffffffffffffffffffffffffffffffffffdddffffffffffccffffff
     `)
+pauseUntil(() => controller.A.isPressed())
+show_character_picker()
+stick = sprites.create(img`
+    . . . . . . c c c c c c . . . . 
+    . . . . . c 6 7 7 7 7 6 c . . . 
+    . . . . c 7 7 7 7 7 7 7 7 c . . 
+    . . . c 6 7 7 7 7 7 7 7 7 6 c . 
+    . . . c 7 7 7 c 6 6 6 6 c 7 c . 
+    . . . f 7 7 7 6 f 6 6 f 6 7 f . 
+    . . . f 7 7 7 7 7 7 7 7 7 7 f . 
+    . . c f 6 7 7 c 6 7 7 7 7 f . . 
+    . c 7 7 f 6 7 7 c c c c f . . . 
+    c 7 7 7 7 f c 6 7 7 7 2 7 c . . 
+    c c 6 7 7 6 c f c 7 7 2 7 7 c . 
+    . . c 6 6 6 c c f 6 7 1 1 1 1 c 
+    . . f 6 6 6 6 c 6 6 1 1 1 1 1 f 
+    . . f c 6 6 6 6 6 1 1 1 1 1 6 f 
+    . . . f 6 6 6 1 1 1 1 1 1 6 f . 
+    . . . . f c c c c c c c c c . . 
+    `, SpriteKind.Player)
+twif = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . 3 3 3 3 . . . . . . . 
+    1 1 1 1 3 3 3 3 3 3 3 . . . . . 
+    1 1 1 1 1 3 3 3 3 3 3 3 . . . . 
+    1 1 1 1 1 1 3 3 3 3 3 3 3 . . . 
+    1 f f f 1 1 3 3 3 f f f 3 . . . 
+    1 f f f f 1 3 3 1 f f f 1 1 . . 
+    . 3 f f f 3 3 1 1 f f 1 1 1 3 . 
+    . 3 3 3 3 3 3 1 1 1 1 1 1 1 3 3 
+    . 3 3 3 3 3 3 3 1 1 1 1 1 1 3 3 
+    . . 3 3 3 3 3 3 3 1 1 1 1 3 3 3 
+    . . 3 3 3 3 3 3 3 3 1 1 1 3 3 3 
+    . . . 3 3 3 3 3 3 3 3 3 3 3 3 3 
+    . . . . 3 3 3 3 3 3 3 3 3 3 3 . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Player)
