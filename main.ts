@@ -3,14 +3,14 @@ namespace SpriteKind {
     export const Backround = SpriteKind.create()
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
-    controller.moveSprite(stick, 10, 20)
+    controller.moveSprite(thePlayer, 10, 20)
 })
 function show_character_picker () {
     scene.centerCameraAt(80, 60)
     for (let value of sprites.allOfKind(SpriteKind.Player)) {
         let gravity = 0
         value.ay = gravity
-        value.setFlag(SpriteFlag.Invisible, true)
+        value.setFlag(SpriteFlag.Invisible, false)
     }
     showCharacterScreen = true
     Huge_stick = sprites.create(assets.image`He is right`, SpriteKind.SelectableCharacter)
@@ -66,12 +66,6 @@ function show_character_picker () {
         `, SpriteKind.Player)
     character_selector_box.z = 101
 }
-scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
-    controller.moveSprite(stick, 30, 30)
-})
-controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
-	
-})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     tiles.setCurrentTilemap(tilemap`level1`)
     if (showCharacterScreen) {
@@ -93,15 +87,28 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     	
     }
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
+    controller.moveSprite(thePlayer, 30, 30)
+})
+controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
+	
+})
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     if (showCharacterScreen) {
         current_character_index = (current_character_index + 1) % ourCharacters.length % ourCharacters.length
     }
 })
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.chestClosed, function (sprite, location) {
+	
+})
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     if (showCharacterScreen) {
         current_character_index = (current_character_index + 1) % ourCharacters.length
     }
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile2`, function (sprite, location) {
+    tiles.setCurrentTilemap(tilemap`level6`)
+    thePlayer.setPosition(24, 102)
 })
 spriteutils.createRenderable(100, function (screen2) {
     if (showCharacterScreen) {
@@ -111,10 +118,9 @@ spriteutils.createRenderable(100, function (screen2) {
     }
 })
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.darkGroundSouthWest0, function (sprite, location) {
-    controller.moveSprite(stick, 100, 100)
+    controller.moveSprite(thePlayer, 100, 100)
 })
 let currently_selected_character: Sprite = null
-let thePlayer: Sprite = null
 let character_selector_box: Sprite = null
 let current_character_index = 0
 let ourCharacters: Sprite[] = []
@@ -122,6 +128,7 @@ let Big_twif: Sprite = null
 let textSprite: TextSprite = null
 let Huge_stick: Sprite = null
 let showCharacterScreen = false
+let thePlayer: Sprite = null
 let twif: Sprite = null
 let stick: Sprite = null
 scene.setBackgroundImage(img`
@@ -149,26 +156,26 @@ scene.setBackgroundImage(img`
     ffddfffbbbdd1111111111111111111111cccccccccccccccc1111cc1c11ccc11c11c111111111111111dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddcfccfffffffff
     cfdffffbcdd11111111111111111111111cccccccccccccccc1111ccccccccccccccc1111111111111111ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddbfcdfffffffff
     ffffffccdd111111111111111111111111cccccccccccccccc1111ccccccccccccccc1111111111111111ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddccfbfffffffff
-    ffcfffbdb1111fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffdddddddddddddddddddddddddddddddddddddbbdddddddddddddddcfdbffffffff
-    fffffcddddd11f1111111111111111111111cc1cc1ccd1cc111111ccccccccccccccc1111111111111111ddddddddfdddddddddddddddddddddddddddddddddddddbddddddddddddddddbfcfffffffff
-    fffffbdddd111f1fff1111111f11111f11ffcc1cc1fcc1cfffffff1ccccffffffffc11fffff1111ff111ddddfddddfddddddddddddddddddddddddddddddddddddbbddddddddddddddddcfcfffffffff
-    ffffcbddddd11f1f1ffff1111f11111f11ffccccccfcccff11111ff1cccfccccccc11f11111f111ff111d1ddfddddfddddddddddddddddddddddddddddddddddddbddddddddddddddddbcfffffffffff
-    fffccddddd111f1f1111ff111f11111f11f1fcccccfcccfc111111111ccfccccccc1f1111111f11f1f11ddddfddddfddddddddddddddddddddddddddddddddddddbdddddddddddddddbbffffffffffff
-    ffdcbddddd111f1f11111f111f11111f11f1fcccccfcccfc111111111ccfcccccc11f1111111f11f1f11ddddfddddfddddddddddddddddddddddddddddddddddddbddddddddddddddddbffffffffffcf
-    ffccddddddd11f1f111111f11f11111f11f11fccccfcccf1111111111ccfcccccc11f1111111f11f11f11dddfddddfddddddddddddddddddddddddddddddddddddbddddddbbdddddddbcffffffffffff
-    ffcbdddddd111f1f111111f11f11111f11f11fccccfcccf1b11111111ccfcccccc11f1111111f1bf11f1ddddfddddfddddddddddddddddddddddddddddddddbbddbbdddddbbdddddddbccfffffffffff
-    ffcbddddd1111f1f1111111f1f11111f11f111fcccfcccfccccccc111ccfcccccc11f1111111f11f111fddddfddddfdddddddddddddddddddddddddddddddddbbddbddddddbddddddddfffffffffffff
-    fcbbdddddd111f1f1111cccf1fcc111fccfc11fcccfcccfccccccccc1ccfcccccc11f1111111f11f111fddddfddddfdddddddddddddddddddddddddddddddddbbbdbbdddddbdbddddbbbcfffffffffff
-    fcddddddd1111f1f111ccccf1fccc11fccfc11fcccfcccfcbbccbbbccccfffffcc11f1111111f11f111dfdddfddddfdddddddddddddddbdddddddddddddddddddbddbbddddbbbddbbbcfffffffffffff
-    ccddddddd1111f1f111ccccfbfccc11fccfc111fccfcccfcbbccffffffcfcccccc11f1111111f11f1111dfddfddddfdddddddddddddddbbdddddddddddddddddddbddbddddbbddbbbbffffffffffffff
-    ddddddddd1111f1f111ccc1fcfcccccf1cfc111fccfcccfccccccccccfcfcccccc11f1111111f11f111bdfddfddddfdddddddddddddddbbdddddddddddddddddddbbbbddddbddbbbbccfffffffffffff
-    dddddddd11111f1f111cc11fcf11cccf1cfc111cfcfcccff1111cccfcfcfcccccc11f1111111f11f111bddf1fddddfdddddddddddddddbdddbdddddddddddddddddbbbddddbbbbbbbccfffffffffffff
-    dddddddd11111f1f111cccfccfbccccfccfcc11cfcfccccf111111cfcfcfcccccc11f1111111f11f111bddf1fddddfdddddddddddddddbddbbdddddddddddddddddbbbdddbbbbbbbbccfffffffffffff
-    dddddddd11111f1f111cfffccfcccccfccfc111ccffccc1ff1b111ffcfcfcccccc11f1111111f11f1dbb1ddffddddfdddddbbbbddddddbddbdddddddddddddddddddbbdddbbbbbbbccffffffffffffff
-    dddddddddd111f1ff11ffcccccfcccfcccf1bb1ccffccc11fffb1ffccfcfcccccc111f1b111f111f1dbbdddffddddfdddddbddbbbddddbdbddddddddddddddddddddbbddbbbbbbbbcbffffffffffffff
-    dddddddddd111f11ffffcccccccfffccccfcccccccfccc1111ffff1ccfcfffffffbb11fffff1111f1db1ddddfddddfdddddbdddbbddddbbdddddddddddddddddddddbbdbbbbbbbbccfffffffffffffff
-    dddddddddd111f1111111cccccccccccccbccbbccccccc1111111b1cccccccccccbbbb111111111b1db1ddd1dddddfddddbbdddbbbddbbdddddddddddbbddddddddbbbbbbbbbbbcbbcffffffffffffff
-    ddddddddd1d11fffffffffcccccccccccccccccccccccc111111cc1ccccccccccccc11111111111fffffffffffffffddddbdddddbbdbbddddddddddddbdddddddddbbbbbbbbbbccbcfffffffffffffff
+    ffcfffbdb1111111111111111111111111ccccccccccccccc11111ccccccccccccccc1111111111111111ddddddddddddddddddddddddddddddddddddddddddddddbbdddddddddddddddcfdbffffffff
+    fffffcddddd1111111111111111111111111cc1cc1ccd1cc111111ccccccccccccccc1111111111111111ddddddddddddddddddddddddddddddddddddddddddddddbddddddddddddddddbfcfffffffff
+    fffffbdddd11111fff1111111f11111f11ffcc1cc1fcc1cfffffff1ccccffffffffc11fffff1111ff111ddddfdddddddddddddddddddddddddddddddddddddddddbbddddddddddddddddcfcfffffffff
+    ffffcbddddd1111f1ffff1111f11111f11ffccccccfcccff11111ff1cccfccccccc11f11111f111ff111d1ddfdddddddddddddddddddddddddddddddddddddddddbddddddddddddddddbcfffffffffff
+    fffccddddd11111f1111ff111f11111f11f1fcccccfcccfc111111111ccfccccccc1f1111111f11f1f11ddddfdddddddddddddddddddddddddddddddddddddddddbdddddddddddddddbbffffffffffff
+    ffdcbddddd11111f11111f111f11111f11f1fcccccfcccfc111111111ccfcccccc11f1111111f11f1f11ddddfdddddddddddddddddddddddddddddddddddddddddbddddddddddddddddbffffffffffcf
+    ffccddddddd1111f111111f11f11111f11f11fccccfcccf1111111111ccfcccccc11f1111111f11f11f11dddfdddddddddddddddddddddddddddddddddddddddddbddddddbbdddddddbcffffffffffff
+    ffcbdddddd11111f111111f11f11111f11f11fccccfcccf1b11111111ccfcccccc11f1111111f1bf11f1ddddfdddddddddddddddddddddddddddddddddddddbbddbbdddddbbdddddddbccfffffffffff
+    ffcbddddd111111f1111111f1f11111f11f111fcccfcccfccccccc111ccfcccccc11f1111111f11f111fddddfddddddddddddddddddddddddddddddddddddddbbddbddddddbddddddddfffffffffffff
+    fcbbdddddd11111f1111cccf1fcc111fccfc11fcccfcccfccccccccc1ccfcccccc11f1111111f11f111fddddfddddddddddddddddddddddddddddddddddddddbbbdbbdddddbdbddddbbbcfffffffffff
+    fcddddddd111111f111ccccf1fccc11fccfc11fcccfcccfcbbccbbbccccfffffcc11f1111111f11f111dfdddfddddddddddddddddddddbdddddddddddddddddddbddbbddddbbbddbbbcfffffffffffff
+    ccddddddd111111f111ccccfbfccc11fccfc111fccfcccfcbbccffffffcfcccccc11f1111111f11f1111dfddfddddddddddddddddddddbbdddddddddddddddddddbddbddddbbddbbbbffffffffffffff
+    ddddddddd111111f111ccc1fcfcccccf1cfc111fccfcccfccccccccccfcfcccccc11f1111111f11f111bdfddfddddddddddddddddddddbbdddddddddddddddddddbbbbddddbddbbbbccfffffffffffff
+    dddddddd1111111f111cc11fcf11cccf1cfc111cfcfcccff1111cccfcfcfcccccc11f1111111f11f111bddf1fddddddddddddddddddddbdddbdddddddddddddddddbbbddddbbbbbbbccfffffffffffff
+    dddddddd1111111f111cccfccfbccccfccfcc11cfcfccccf111111cfcfcfcccccc11f1111111f11f111bddf1fddddddddddddddddddddbddbbdddddddddddddddddbbbdddbbbbbbbbccfffffffffffff
+    dddddddd1111111f111cfffccfcccccfccfc111ccffccc1ff1b111ffcfcfcccccc11f1111111f11f1dbb1ddffddddddddddbbbbddddddbddbdddddddddddddddddddbbdddbbbbbbbccffffffffffffff
+    dddddddddd11111ff11ffcccccfcccfcccf1bb1ccffccc11fffb1ffccfcfcccccc111f1b111f111f1dbbdddffddddddddddbddbbbddddbdbddddddddddddddddddddbbddbbbbbbbbcbffffffffffffff
+    dddddddddd111111ffffcccccccfffccccfcccccccfccc1111ffff1ccfcfffffffbb11fffff1111f1db1ddddfddddddddddbdddbbddddbbdddddddddddddddddddddbbdbbbbbbbbccfffffffffffffff
+    dddddddddd11111111111cccccccccccccbccbbccccccc1111111b1cccccccccccbbbb111111111b1db1ddd1ddddddddddbbdddbbbddbbdddddddddddbbddddddddbbbbbbbbbbbcbbcffffffffffffff
+    ddddddddd1d11111111111cccccccccccccccccccccccc111111cc1ccccccccccccc1111111111bbbbddddddddddddddddbdddddbbdbbddddddddddddbdddddddddbbbbbbbbbbccbcfffffffffffffff
     ddddddddd1d11b11111111ccccccccccccbccbcccccccc111111bb1cccccccccccc111111111111bbbdddddddddddddddbbdddddbbbbbddddddddddddbdddddddddbbbbbbbbbbbbcffffffffffffffff
     ddddddddd1d11b11111111cccccccccccccccccccccccc1111111bbcccccccccccc11111111111bbbdddddddddddddddddddddddbbbbddddddddddddbbdddddbddbbbbbbbbbbbccfffffffffffffffff
     dddddddddddddbbd1bb111cccccccccccc111d1cccccccd1d1111bbcccccccccccc11111111111bbb1ddddddddddddddddddddddbbbbddddddddddddbbdddddbddbbbbbbbbbbbbccffffffffffffffff
@@ -247,7 +254,6 @@ scene.setBackgroundImage(img`
     fffffffffffffffffffffffffffffffffbffffffbffffffffffffffffffffffbfcffffcfffffffffffffffcffffffffffffffffffffffffffffffffffffffffffffffffffffdddffffffffffccffffff
     `)
 pauseUntil(() => controller.A.isPressed())
-show_character_picker()
 stick = sprites.create(img`
     . . . . . . c c c c c c . . . . 
     . . . . . c 6 7 7 7 7 6 c . . . 
@@ -284,3 +290,4 @@ twif = sprites.create(img`
     . . . . 3 3 3 3 3 3 3 3 3 3 3 . 
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Player)
+show_character_picker()
