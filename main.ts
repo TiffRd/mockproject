@@ -3,7 +3,7 @@ namespace SpriteKind {
     export const Backround = SpriteKind.create()
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
-    controller.moveSprite(thePlayer, 10, 20)
+    controller.moveSprite(sprite, 10, 20)
 })
 function show_character_picker () {
     scene.centerCameraAt(80, 60)
@@ -63,13 +63,19 @@ function show_character_picker () {
         c..................................c
         c..................................c
         cccccccccccccccccccccccccccccccccccc
-        `, SpriteKind.Player)
+        `, SpriteKind.Backround)
     character_selector_box.z = 101
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     tiles.setCurrentTilemap(tilemap`level1`)
     if (showCharacterScreen) {
-        thePlayer = sprites.readDataSprite(currently_selected_character, "player")
+        if (current_character_index == 0) {
+            thePlayer = stick
+            sprites.destroy(twif)
+        } else {
+            thePlayer = twif
+            sprites.destroy(stick)
+        }
         tiles.placeOnRandomTile(thePlayer, sprites.dungeon.darkGroundNorthEast1)
         scene.cameraFollowSprite(thePlayer)
         for (let value of sprites.allOfKind(SpriteKind.SelectableCharacter)) {
@@ -83,12 +89,10 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         }
         controller.moveSprite(thePlayer, 100, 0)
         showCharacterScreen = false
-    } else {
-    	
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
-    controller.moveSprite(thePlayer, 30, 30)
+    controller.moveSprite(sprite, 30, 30)
 })
 controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
 	
@@ -99,7 +103,9 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.chestClosed, function (sprite, location) {
-	
+    tiles.setTileAt(tiles.getTileLocation(15, 6), assets.tile`myTile2`)
+    tiles.setTileAt(tiles.getTileLocation(10, 13), assets.tile`myTile3`)
+    music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     if (showCharacterScreen) {
@@ -118,9 +124,10 @@ spriteutils.createRenderable(100, function (screen2) {
     }
 })
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.darkGroundSouthWest0, function (sprite, location) {
-    controller.moveSprite(thePlayer, 100, 100)
+    controller.moveSprite(sprite, 100, 100)
 })
 let currently_selected_character: Sprite = null
+let thePlayer: Sprite = null
 let character_selector_box: Sprite = null
 let current_character_index = 0
 let ourCharacters: Sprite[] = []
@@ -128,7 +135,6 @@ let Big_twif: Sprite = null
 let textSprite: TextSprite = null
 let Huge_stick: Sprite = null
 let showCharacterScreen = false
-let thePlayer: Sprite = null
 let twif: Sprite = null
 let stick: Sprite = null
 scene.setBackgroundImage(img`
