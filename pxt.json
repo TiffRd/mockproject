@@ -1,5 +1,5 @@
 {
-    "name": "Mock project",
+    "name": "Dungeon maze",
     "description": "",
     "dependencies": {
         "device": "*",
@@ -23,7 +23,7 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "1.12.46",
+        "target": "1.12.47",
         "targetId": "arcade"
     },
     "supportedTargets": [
