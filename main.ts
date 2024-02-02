@@ -5,6 +5,7 @@ namespace SpriteKind {
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
     controller.moveSprite(sprite, 10, 20)
 })
+// Microsoft Makecode (YT)
 function show_character_picker () {
     scene.centerCameraAt(80, 60)
     for (let value of sprites.allOfKind(SpriteKind.Player)) {
@@ -72,6 +73,7 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.darkGroundNorthEast1, fun
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
     controller.moveSprite(sprite, 30, 30)
 })
+// Microsoft Makecode (YT)
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     tiles.setCurrentTilemap(tilemap`level1`)
     if (showCharacterScreen) {
@@ -107,11 +109,13 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, l
     tiles.placeOnTile(sprite, tiles.getTileLocation(14, 1))
     sprite.setVelocity(100, 100)
 })
+// Microsoft Makecode (YT)
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     if (showCharacterScreen) {
         current_character_index = (current_character_index + 1) % ourCharacters.length % ourCharacters.length
     }
 })
+// Mr Florczak
 function Enemy_respawn () {
     for (let index = 0; index < 1; index++) {
         enemy_sprite = sprites.create(Enemy_images._pickRandom(), SpriteKind.Enemy)
@@ -128,6 +132,7 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.chestClosed, function (sp
     tiles.setTileAt(tiles.getTileLocation(10, 13), assets.tile`myTile3`)
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
 })
+// Microsoft Makecode (YT)
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     if (showCharacterScreen) {
         current_character_index = (current_character_index + 1) % ourCharacters.length
@@ -146,10 +151,14 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile8`, function (sprite, l
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile2`, function (sprite, location) {
+    // maps drawn by XIel(partner)
+    // 
     tiles.setCurrentTilemap(tilemap`level6`)
     tiles.placeOnTile(sprite, tiles.getTileLocation(14, 1))
     info.setLife(5)
     Spawn_location = tiles.getTilesByType(sprites.dungeon.darkGroundSouthWest0)
+    // Example spawn of enemies provided b
+    // y Mr.Florczak
     Enemy_images = [assets.image`Twif`, assets.image`Stick`, assets.image`myImage1`]
     for (let index = 0; index < 5; index++) {
         enemy_sprite = sprites.create(Enemy_images._pickRandom(), SpriteKind.Enemy)
@@ -169,6 +178,7 @@ info.onLifeZero(function () {
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.darkGroundSouthEast1, function (sprite, location) {
     controller.moveSprite(sprite, 100, 100)
 })
+// Microsoft Make Code(YT)
 spriteutils.createRenderable(100, function (screen2) {
     if (showCharacterScreen) {
         screen2.fill(11)
